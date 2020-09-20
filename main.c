@@ -16,29 +16,29 @@
 #define BEBOP_IP_ADDRESS "192.168.42.1"
 #define BEBOP_DISCOVERY_PORT 44444
 
-#define DISPLAY_WITH_MPLAYER 1
+// #define DISPLAY_WITH_MPLAYER 1
 
-#define FIFO_DIR_PATTERN "/tmp/arsdk_XXXXXX"
-#define FIFO_NAME "arsdk_fifo"
+// #define FIFO_DIR_PATTERN "/tmp/arsdk_XXXXXX"
+// #define FIFO_NAME "arsdk_fifo"
 
 
 
-static char fifo_dir[] = FIFO_DIR_PATTERN;
-static char fifo_name[128] = "";
+// static char fifo_dir[] = FIFO_DIR_PATTERN;
+// static char fifo_name[128] = "";
 
 int gIHMRun = 1;
-char gErrorStr[ERROR_STR_LENGTH];
+// char gErrorStr[ERROR_STR_LENGTH];
 // IHM_t *ihm = NULL;
 
-FILE *videoOut = NULL;
-int frameNb = 0;
+// FILE *videoOut = NULL;
+// int frameNb = 0;
 ARSAL_Sem_t stateSem;
-int isBebop2 = 0;
+// int isBebop2 = 0;
 
-static void signal_handler(int signal)
-{
-    gIHMRun = 0;
-}
+// static void signal_handler(int signal)
+// {
+//     gIHMRun = 0;
+// }
 
 eARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE getFlyingState(ARCONTROLLER_Device_t *deviceController)
 {
@@ -205,75 +205,75 @@ void batteryStateChanged (uint8_t percent)
     // }
 }
 
-eARCONTROLLER_ERROR decoderConfigCallback (ARCONTROLLER_Stream_Codec_t codec, void *customData)
-{
-    if (videoOut != NULL)
-    {
-        if (codec.type == ARCONTROLLER_STREAM_CODEC_TYPE_H264)
-        {
-            if (DISPLAY_WITH_MPLAYER)
-            {
-                fwrite(codec.parameters.h264parameters.spsBuffer, codec.parameters.h264parameters.spsSize, 1, videoOut);
-                fwrite(codec.parameters.h264parameters.ppsBuffer, codec.parameters.h264parameters.ppsSize, 1, videoOut);
+// eARCONTROLLER_ERROR decoderConfigCallback (ARCONTROLLER_Stream_Codec_t codec, void *customData)
+// {
+//     if (videoOut != NULL)
+//     {
+//         if (codec.type == ARCONTROLLER_STREAM_CODEC_TYPE_H264)
+//         {
+//             if (DISPLAY_WITH_MPLAYER)
+//             {
+//                 fwrite(codec.parameters.h264parameters.spsBuffer, codec.parameters.h264parameters.spsSize, 1, videoOut);
+//                 fwrite(codec.parameters.h264parameters.ppsBuffer, codec.parameters.h264parameters.ppsSize, 1, videoOut);
 
-                fflush (videoOut);
-            }
-        }
+//                 fflush (videoOut);
+//             }
+//         }
 
-    }
-    else
-    {
-        ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "videoOut is NULL.");
-    }
+//     }
+//     else
+//     {
+//         ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "videoOut is NULL.");
+//     }
 
-    return ARCONTROLLER_OK;
-}
+//     return ARCONTROLLER_OK;
+// }
 
 
-eARCONTROLLER_ERROR didReceiveFrameCallback (ARCONTROLLER_Frame_t *frame, void *customData)
-{
-    if (videoOut != NULL)
-    {
-        if (frame != NULL)
-        {
-            if (DISPLAY_WITH_MPLAYER)
-            {
-                fwrite(frame->data, frame->used, 1, videoOut);
+// eARCONTROLLER_ERROR didReceiveFrameCallback (ARCONTROLLER_Frame_t *frame, void *customData)
+// {
+//     if (videoOut != NULL)
+//     {
+//         if (frame != NULL)
+//         {
+//             if (DISPLAY_WITH_MPLAYER)
+//             {
+//                 fwrite(frame->data, frame->used, 1, videoOut);
 
-                fflush (videoOut);
-            }
-        }
-        else
-        {
-            ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame is NULL.");
-        }
-    }
-    else
-    {
-        ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "videoOut is NULL.");
-    }
+//                 fflush (videoOut);
+//             }
+//         }
+//         else
+//         {
+//             ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "frame is NULL.");
+//         }
+//     }
+//     else
+//     {
+//         ARSAL_PRINT(ARSAL_PRINT_WARNING, TAG, "videoOut is NULL.");
+//     }
 
-    return ARCONTROLLER_OK;
-}
+//     return ARCONTROLLER_OK;
+// }
 
 
 // IHM callbacks:
 
 
 
-int customPrintCallback (eARSAL_PRINT_LEVEL level, const char *tag, const char *format, va_list va)
-{
-    // Custom callback used when ncurses is runing for not disturb the IHM
+// int customPrintCallback (eARSAL_PRINT_LEVEL level, const char *tag, const char *format, va_list va)
+// {
+//     // Custom callback used when ncurses is runing for not disturb the IHM
 
-    if ((level == ARSAL_PRINT_ERROR) && (strcmp(TAG, tag) == 0))
-    {
-        // Save the last Error
-        vsnprintf(gErrorStr, (ERROR_STR_LENGTH - 1), format, va);
-        gErrorStr[ERROR_STR_LENGTH - 1] = '\0';
-    }
+//     if ((level == ARSAL_PRINT_ERROR) && (strcmp(TAG, tag) == 0))
+//     {
+//         // Save the last Error
+//         vsnprintf(gErrorStr, (ERROR_STR_LENGTH - 1), format, va);
+//         gErrorStr[ERROR_STR_LENGTH - 1] = '\0';
+//     }
 
-    return 1;
-}
+//     return 1;
+// }
 int main (int argc, char *argv[])
 {
     // local declarations
@@ -284,39 +284,39 @@ int main (int argc, char *argv[])
     eARCONTROLLER_DEVICE_STATE deviceState = ARCONTROLLER_DEVICE_STATE_MAX;
     pid_t child = 0;
 
-    /* Set signal handlers */
-    struct sigaction sig_action = {
-        .sa_handler = signal_handler,
-    };
+    // /* Set signal handlers */
+    // struct sigaction sig_action = {
+    //     .sa_handler = signal_handler,
+    // };
 
-    int ret = sigaction(SIGINT, &sig_action, NULL);
-    if (ret < 0)
-    {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Unable to set SIGINT handler : %d(%s)",
-                    errno, strerror(errno));
-        return 1;
-    }
-    ret = sigaction(SIGPIPE, &sig_action, NULL);
-    if (ret < 0)
-    {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Unable to set SIGPIPE handler : %d(%s)",
-                    errno, strerror(errno));
-        return 1;
-    }
+    // int ret = sigaction(SIGINT, &sig_action, NULL);
+    // if (ret < 0)
+    // {
+    //     ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Unable to set SIGINT handler : %d(%s)",
+    //                 errno, strerror(errno));
+    //     return 1;
+    // }
+    // ret = sigaction(SIGPIPE, &sig_action, NULL);
+    // if (ret < 0)
+    // {
+    //     ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Unable to set SIGPIPE handler : %d(%s)",
+    //                 errno, strerror(errno));
+    //     return 1;
+    // }
 
 
-    if (mkdtemp(fifo_dir) == NULL)
-    {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Mkdtemp failed.");
-        return 1;
-    }
-    snprintf(fifo_name, sizeof(fifo_name), "%s/%s", fifo_dir, FIFO_NAME);
+    // if (mkdtemp(fifo_dir) == NULL)
+    // {
+    //     ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Mkdtemp failed.");
+    //     return 1;
+    // }
+    // snprintf(fifo_name, sizeof(fifo_name), "%s/%s", fifo_dir, FIFO_NAME);
 
-    if(mkfifo(fifo_name, 0666) < 0)
-    {
-        ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Mkfifo failed: %d, %s", errno, strerror(errno));
-        return 1;
-    }
+    // if(mkfifo(fifo_name, 0666) < 0)
+    // {
+    //     ARSAL_PRINT(ARSAL_PRINT_ERROR, "ERROR", "Mkfifo failed: %d, %s", errno, strerror(errno));
+    //     return 1;
+    // }
 
     ARSAL_Sem_Init (&(stateSem), 0, 0);
 
@@ -441,7 +441,6 @@ int main (int argc, char *argv[])
             ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- deviceState :%d", deviceState);
             ARSAL_PRINT(ARSAL_PRINT_ERROR, TAG, "- error :%s", ARCONTROLLER_Error_ToString(error));
         }
-        takeOff(deviceController);
     }
 /// ***********
     // send the command that tells to the Bebop to begin its streaming
@@ -458,34 +457,21 @@ int main (int argc, char *argv[])
 
     if (!failed)
     {
-        // IHM_PrintInfo(ihm, "Running ... ('t' to takeoff ; Spacebar to land ; 'e' for emergency ; Arrow keys and ('r','f','d','g') to move ; 'q' to quit)");
-
-#ifdef IHM
-        while (gIHMRun)
-        {
-            usleep(50);
-        }
-#else
+        // Flight operations
+        takeOff(deviceController);
         int i = 20;
         ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "- sleep 20 ... ");
         while (gIHMRun && i--)
             sleep(1);
-#endif
     }
 
-#ifdef IHM
-    IHM_Delete (&ihm);
-#endif
 
     // we are here because of a disconnection or user has quit IHM, so safely delete everything
     if (deviceController != NULL)
     {
-
-
         deviceState = ARCONTROLLER_Device_GetState (deviceController, &error);
         if ((error == ARCONTROLLER_OK) && (deviceState != ARCONTROLLER_DEVICE_STATE_STOPPED))
         {
-            // IHM_PrintInfo(ihm, "Disconnecting ...");
             ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "Disconnecting ...");
 
             error = ARCONTROLLER_Device_Stop (deviceController);
@@ -497,35 +483,17 @@ int main (int argc, char *argv[])
             }
         }
 
-        // IHM_PrintInfo(ihm, "");
         ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "ARCONTROLLER_Device_Delete ...");
         ARCONTROLLER_Device_Delete (&deviceController);
-
-        if (DISPLAY_WITH_MPLAYER)
-        {
-            fflush (videoOut);
-            fclose (videoOut);
-
-            if (child > 0)
-            {
-                kill(child, SIGKILL);
-            }
-        }
     }
 
-    ARSAL_Sem_Destroy (&(stateSem));
+    // ARSAL_Sem_Destroy (&(stateSem));
 
-    unlink(fifo_name);
-    rmdir(fifo_dir);
+    // unlink(fifo_name);
+    // rmdir(fifo_dir);
 
     ARSAL_PRINT(ARSAL_PRINT_INFO, TAG, "-- END --");
 
     return EXIT_SUCCESS;
 }
-
-/*****************************************
- *
- *             private implementation:
- *
- ****************************************/
 
